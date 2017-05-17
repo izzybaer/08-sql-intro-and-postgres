@@ -3,6 +3,7 @@
 // TODO: Install and require the NPM Postgres package 'pg' into your server.js, and ensure that it is then listed as a dependency in your package.json
 const fs = require('fs');
 const express = require('express');
+const pg = require('pg');
 
 // REVIEW: Require in body-parser for post requests in our server. If you want to know more about what this does, read the docs!
 const bodyParser = require('body-parser');
@@ -19,7 +20,7 @@ const conString = 'postgres://localhost:5432';
 //       This is how it knows the URL and, for Windows and Linux users, our username and password for our
 //       database when client.connect is called on line 26. Thus, we need to pass our conString into our
 //       pg.Client() call.
-const client = new pg.Client('something needs to go here... read the instructions above!');
+const client = new pg.Client(conString);
 
 // REVIEW: Use the client object to connect to our DB.
 client.connect();
@@ -35,6 +36,9 @@ app.use(express.static('./public'));
 app.get('/new', function(request, response) {
   // COMMENT: What number(s) of the full-stack-diagram.png image correspond to the following line of code? Identify which line(s) of code from the client-side blog app are interacting with this particular piece of `server.js`, and the name of the method. Do those lines of code interact with or invoke a different portion of the blog, and if so, where? What part of CRUD is being enacted/managed by this particular piece of code?
   // Put your response here...
+
+  // This code corresponds to number 5 from the png diagram, the response from the server to the client.
+  // If there were a link to new.html on the index page, that link would interact with this line of code, but there isn't so the interaction happens when the user types /new into the URL, which fires a GET from the server. When /new is served, the page fires articleView.initNewArticlePage. That method then creates an event listener on #new-form for articlView.create and articleView.submit. This is a GET (READ) event.
   response.sendFile('new.html', {root: './public'});
 });
 
@@ -43,6 +47,9 @@ app.get('/new', function(request, response) {
 app.get('/articles', function(request, response) {
   // COMMENT: What number(s) of the full-stack-diagram.png image correspond to the following line of code? Identify which line(s) of code from the client-side blog app are interacting with this particular piece of `server.js`, and the name of the method. Do those lines of code interact with or invoke a different portion of the blog, and if so, where? What part of CRUD is being enacted/managed by this particular piece of code?
   // Put your response here...
+
+  // This is a query from the server to the database, which is number three on the diagram.
+  // This line interacts with line 46 from article.js, which is $.get('/articles/') is the first line of the Article.fetchAll function. This funtion then passes the results to Article.loadAll as the argument on line 50. This is an HTTP GET from the client and a SQL SELECT from ther server to the DB, which are READ functions.
   client.query('SELECT * FROM articles')
   .then(function(result) {
     response.send(result.rows);
@@ -55,6 +62,11 @@ app.get('/articles', function(request, response) {
 app.post('/articles', function(request, response) {
   // COMMENT: What number(s) of the full-stack-diagram.png image correspond to the following line of code? Identify which line(s) of code from the client-side blog app are interacting with this particular piece of `server.js`, and the name of the method. Do those lines of code interact with or invoke a different portion of the blog, and if so, where? What part of CRUD is being enacted/managed by this particular piece of code?
   // Put your response here...
+
+  //This is also a query from the server to the database, which is number three on the diagram.
+  // Line 69 of article.js uses a $.post('/articles') on Article.prototype.insertRecord.
+  // When the event listener created under articleView.initNewArticlePage for submit fires, the articleView.submit method fires, which takes the information entered by the user and instantiates a new article object. It then fires article.insertRecord, which creates an INSERT query and send the information to the DB, which then sends a response of 'insert completed.'
+  // This is a CREATE event.
   client.query(
     `INSERT INTO
     articles(title, author, "authorUrl", category, "publishedOn", body)
@@ -80,6 +92,11 @@ app.post('/articles', function(request, response) {
 app.put('/articles/:id', function(request, response) {
   // COMMENT: What number(s) of the full-stack-diagram.png image correspond to the following line of code? Identify which line(s) of code from the client-side blog app are interacting with this particular piece of `server.js`, and the name of the method. Do those lines of code interact with or invoke a different portion of the blog, and if so, where? What part of CRUD is being enacted/managed by this particular piece of code?
   // Put your response here...
+
+  //This is again the query from the server to the database, and is number three on the diagram.
+  //The app.put requst corresponds to lines 88-105 of article.js, written as $.ajax which calls a menthod of PUT, under the Article.prototype.updateRecord method on the constructor prototype.
+  //At the moment we have yet to write an invocation of this function, so there is currently no way for the user to update an article record.
+  //This is an UPDATE event using an HTTP PUT and SQUL UPDATE call.
   client.query(
     `UPDATE articles
     SET
