@@ -124,6 +124,12 @@ app.put('/articles/:id', function(request, response) {
 app.delete('/articles/:id', function(request, response) {
   // COMMENT: What number(s) of the full-stack-diagram.png image correspond to the following line of code? Identify which line(s) of code from the client-side blog app are interacting with this particular piece of `server.js`, and the name of the method. Do those lines of code interact with or invoke a different portion of the blog, and if so, where? What part of CRUD is being enacted/managed by this particular piece of code?
   // Put your response here...
+
+  // This is also a query from the server to the database, represented by number three on the diagram.
+  // Lines 77-86 from article.js are interacting with this piece of server.js, written as $.ajax which calls a method of PUT, inside of Article.prototype.deleteRecord. The database sends a result code to the server which then sends a response of "delete complete" to the client.
+  // Currently we haven't invoked Article.prototype.deleteRecord yet, which I'm guessing we will be doing tomorrow.
+  // In CRUD this is a DELETE aka DESTROY SQL QUERY and an HTTP DELETE.
+
   client.query(
     `DELETE FROM articles WHERE article_id=$1;`,
     [request.params.id]
@@ -139,6 +145,11 @@ app.delete('/articles/:id', function(request, response) {
 app.delete('/articles', function(request, response) {
   // COMMENT: What number(s) of the full-stack-diagram.png image correspond to the following line of code? Identify which line(s) of code from the client-side blog app are interacting with this particular piece of `server.js`, and the name of the method. Do those lines of code interact with or invoke a different portion of the blog, and if so, where? What part of CRUD is being enacted/managed by this particular piece of code?
   // Put your response here...
+
+  // This is also a query from the server to the database, represented by number three on the diagram.
+  // Lines 58-67 of article.js interact with this piece of server.js, written as $.ajax with a method of DELETE, inside the function Article.truncateTable. The database then sends a result code to the server which then sends a response to the client of "delete complete".
+  // We have not yet invoked Article.truncateTable.
+  // In CRUD this is a HTTP DELETE and a SQL DELETE QUERY (DESTROY).
   client.query(
     'DELETE FROM articles;'
   )
