@@ -100,7 +100,7 @@ app.put('/articles/:id', function(request, response) {
   client.query(
     `UPDATE articles
     SET
-      title=$1, author=$2, "authorUrl"=$3, category=$4, "publishedOn"=$5, body=$6
+    title=$1, author=$2, "authorUrl"=$3, category=$4, "publishedOn"=$5, body=$6
     WHERE article_id=$7;
     `,
     [
@@ -178,7 +178,6 @@ app.listen(PORT, function() {
 function loadArticles() {
   // COMMENT: What number(s) of the full-stack-diagram.png image correspond to the following line of code? Identify which line(s) of code from the client-side blog app are interacting with this particular piece of `server.js`, and the name of the method. Do those lines of code interact with or invoke a different portion of the blog, and if so, where? What part of CRUD is being enacted/managed by this particular piece of code?
   // Put your response here...
-
   // This is ALSO A QUERY (ALL THE QUERIES), represented by number three on the diagram.
   // Nothing from the client-side blog app is interacting with loadArticles, we only interact with these functions inside of server.js. Then loadDB() is invoked on line 56 of server.js which then invokes loadArticles on line 205 in server.js
   // If loadDB() had to instantiate a new table schema on the database, then this will be an UPDATE. If a table schema already exists then we don't do anything.
@@ -196,7 +195,7 @@ function loadArticles() {
             INSERT INTO
             articles(title, author, "authorUrl", category, "publishedOn", body)
             VALUES ($1, $2, $3, $4, $5, $6);
-          `,
+            `,
             [ele.title, ele.author, ele.authorUrl, ele.category, ele.publishedOn, ele.body]
           )
         })
@@ -208,6 +207,10 @@ function loadArticles() {
 function loadDB() {
   // COMMENT: What number(s) of the full-stack-diagram.png image correspond to the following line of code? Identify which line(s) of code from the client-side blog app are interacting with this particular piece of `server.js`, and the name of the method. Do those lines of code interact with or invoke a different portion of the blog, and if so, where? What part of CRUD is being enacted/managed by this particular piece of code?
   // Put your response here...
+
+  // Yes, you guessed it, this is also a query from the server to the database, represented by number three on the diagram.
+  // There is no code from the client-side blog that interacts with this code. It doesn't invoke anything other than loadArticles().
+  // IF NO TABLE EXISTS, this will be a CREATE.
   client.query(`
     CREATE TABLE IF NOT EXISTS articles (
       article_id SERIAL PRIMARY KEY,
