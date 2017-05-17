@@ -53,6 +53,7 @@ app.get('/articles', function(request, response) {
   client.query('SELECT * FROM articles')
   .then(function(result) {
     response.send(result.rows);
+    console.log(result.rows);
   })
   .catch(function(err) {
     console.error(err)
@@ -65,7 +66,7 @@ app.post('/articles', function(request, response) {
 
   //This is also a query from the server to the database, which is number three on the diagram.
   // Line 69 of article.js uses a $.post('/articles') on Article.prototype.insertRecord.
-  // When the event listener created under articleView.initNewArticlePage for submit fires, the articleView.submit method fires, which takes the information entered by the user and instantiates a new article object. It then fires article.insertRecord, which creates an INSERT query and send the information to the DB, which then sends a response of 'insert completed.'
+  // When the event listener created under articleView.initNewArticlePage for submit fires, the articleView.submit method fires, which takes the information entered by the user and instantiates a new article object. It then fires article.insertRecord, which creates an INSERT query and send the information to the DB, which sends a result code to the server, which then sends a response of 'insert completed.'
   // This is a CREATE event.
   client.query(
     `INSERT INTO
@@ -94,7 +95,7 @@ app.put('/articles/:id', function(request, response) {
   // Put your response here...
 
   //This is again the query from the server to the database, and is number three on the diagram.
-  //The app.put requst corresponds to lines 88-105 of article.js, written as $.ajax which calls a menthod of PUT, under the Article.prototype.updateRecord method on the constructor prototype.
+  //The app.put requst corresponds to lines 88-105 of article.js, written as $.ajax which calls a menthod of PUT, under the Article.prototype.updateRecord method on the constructor prototype. This line sends an UPDATE query to the DB, which sends a result code to the server, which then sends a response of 'update complete.'
   //At the moment we have yet to write an invocation of this function, so there is currently no way for the user to update an article record.
   //This is an UPDATE event using an HTTP PUT and SQUL UPDATE call.
   client.query(
