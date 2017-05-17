@@ -163,6 +163,9 @@ app.delete('/articles', function(request, response) {
 
 // COMMENT: What is this function invocation doing?
 // Put your response here...
+
+// loadDB sends a create query CREATE TABLE IF NOT EXISTS to the database, which means check if a table named 'articles' exists, if not, then create a new table schema with the following fields.
+// Then it fires the function.loadArticles function in server.js
 loadDB();
 
 app.listen(PORT, function() {
@@ -175,6 +178,10 @@ app.listen(PORT, function() {
 function loadArticles() {
   // COMMENT: What number(s) of the full-stack-diagram.png image correspond to the following line of code? Identify which line(s) of code from the client-side blog app are interacting with this particular piece of `server.js`, and the name of the method. Do those lines of code interact with or invoke a different portion of the blog, and if so, where? What part of CRUD is being enacted/managed by this particular piece of code?
   // Put your response here...
+
+  // This is ALSO A QUERY (ALL THE QUERIES), represented by number three on the diagram.
+  // Nothing from the client-side blog app is interacting with loadArticles, we only interact with these functions inside of server.js. Then loadDB() is invoked on line 56 of server.js which then invokes loadArticles on line 205 in server.js
+  // If loadDB() had to instantiate a new table schema on the database, then this will be an UPDATE. If a table schema already exists then we don't do anything.
   client.query('SELECT COUNT(*) FROM articles')
   .then(result => {
     // REVIEW: result.rows is an array of objects that Postgres returns as a response to a query.
