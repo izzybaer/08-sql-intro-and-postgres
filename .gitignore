@@ -61,5 +61,7 @@ Session.vim
 .netrwhist
 *~
 
+node_modules
+
 # auto-generated tag files
 tags
